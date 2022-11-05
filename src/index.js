@@ -5,6 +5,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const users = [];
 const tweets = [
     {
         username: "bobesponja",
@@ -45,12 +46,22 @@ const tweets = [
 
 app.post('/sign-up', (req, res) => {
     const {username, avatar} = req.body;
-    if(!username || ! avatar){
-        res.status(400).send("Por favor, preencha todos os campos!");
+    if(!username || !avatar){
+        res.status(420).send("Please, fill all fields");
         return;
     }
-    res.status(201).send("Usuário cadastrado com sucesso!");
+    const signedUser = users.find((usr)=> usr.username === username);
+    if(signedUser){
+        res.status(409).send("User already exists");
+        return;
+    }
+        
+
+    users.push(req.body);
+    console.log(users);
+    res.status(201).send("Created user with success!");
 })
 
+console.log(users)
 
 app.listen(5000);
