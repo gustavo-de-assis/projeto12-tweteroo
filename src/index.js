@@ -74,9 +74,16 @@ app.post('/sign-up', (req, res) => {
         return;
     }
 
+    
+    const signedUser = users.find((usr)=> usr.username === username);
+    if(signedUser){
+        res.status(409).send("User already exists");
+        return;
+    }
+    
     const user = {username, avatar};
-
-    users.push(req.body);
+    
+    users.push(user);
     res.status(201).send("OK!");
 })
 
