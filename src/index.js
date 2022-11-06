@@ -1,4 +1,4 @@
-import express, {json} from 'express';
+import express, { json } from 'express';
 import cors from 'cors';
 
 const app = express();
@@ -54,33 +54,40 @@ const tweets = [
     }
 ]
 
+app.get('/tweets', (req,res)=>{
+    const tweetList = [];
+
+     for(let i = 0; i < 10 ; i++){
+        tweetList.push(tweets[i]);
+    }
+    console.log(tweetList);
+
+	res.status(201).send(tweets);
+    
+})
+
 app.post('/sign-up', (req, res) => {
     const {username, avatar} = req.body;
     
     if(!username || !avatar){
-        res.status(420).send("Please, fill all fields");
+        res.status(422).send("Please, fill all fields");
         return;
-    }    
- /*    if(signedUser){
-        res.status(409).send("User already exists");
-        return;
-    } */
+    }
+
     const user = {username, avatar};
 
-    users.push(user);
-    console.log(users);
+    users.push(req.body);
     res.status(201).send("OK!");
 })
 
 app.post('/tweets', (req, res)=>{
     const {username, tweet} = req.body;
-
-    const usr = users[0];
+    const avatar = users[0].avatar;
 
     const obj = {
         username, 
         tweet,
-        avatar: usr.avatar
+        avatar
     }
 
     if(!username || !tweet){
@@ -89,21 +96,12 @@ app.post('/tweets', (req, res)=>{
     }
     
 
-    //tweets.push(req.body);
-    tweets.unshift(req.body);
+    
+    tweets.unshift(obj);
     res.status(201).send("OK!");
 
 })
 
-app.get('/tweets', (req,res)=>{
-    let tweetList = [];
 
-	for(let i = 0; i < 10; i++){
-		tweetList.push(tweets[i]);
-	}
-
-	res.send(tweetList);
-    
-})
 
 app.listen(5000);
